@@ -158,26 +158,37 @@ class ContentSwitcher {
             <div class="flex flex-col items-center space-y-4">
                 <div class="text-center">
                     <h2 class="text-xl font-bold">3Dステレオグラム</h2>
-                    <p class="text-xs text-emerald-400 font-medium mt-1">図形が浮かび上がって見えたら成功です！</p>
+                    <p class="text-xs text-emerald-400 font-medium mt-1">下の2つの点が「3つ」に見えるように目を調節してください</p>
                 </div>
                 
-                <div class="flex items-center gap-4 text-[10px] bg-slate-800 px-4 py-2 rounded-full border border-slate-700">
-                    <span class="text-slate-400 italic">見方のガイド:</span>
-                    <div class="flex items-center gap-1"><div class="stereo-guide"></div><span class="text-slate-300">平行法（遠くを見る）</span></div>
-                    <div class="flex items-center gap-1"><div class="stereo-guide" style="background-color:#3b82f6"></div><span class="text-slate-300">交差法（寄り目にする）</span></div>
+                <!-- 実際の基準点 -->
+                <div class="flex justify-center gap-16 py-2" id="stereo-reference-dots">
+                    <div class="w-4 h-4 rounded-full bg-red-500 shadow-[0_0_10px_rgba(239,68,68,0.8)] animate-pulse"></div>
+                    <div class="w-4 h-4 rounded-full bg-red-500 shadow-[0_0_10px_rgba(239,68,68,0.8)] animate-pulse"></div>
                 </div>
 
                 <div id="stereo-container" class="w-full max-w-2xl aspect-video bg-slate-900 rounded-lg flex items-center justify-center relative border-2 border-slate-800">
                     <canvas id="stereo-canvas" width="600" height="400" class="w-full h-full opacity-80"></canvas>
                 </div>
 
-                <div class="bg-slate-800 p-4 rounded-lg max-w-md text-[11px] space-y-2 border border-slate-700">
-                    <p><strong>平行法:</strong> 画面の奥をぼーっと見るようにすると、2つの点が3つに見えてきます。真ん中の点が重なった時、図形が浮き出ます。</p>
-                    <p><strong>交差法:</strong> 寄り目にして画面の手前に焦点を合わせます。同様に3つに見えるように調節してください。</p>
+                <div class="bg-slate-800 p-4 rounded-lg max-w-md text-[11px] space-y-3 border border-slate-700">
+                    <div class="flex items-start gap-2">
+                        <span class="bg-emerald-600 px-2 py-0.5 rounded text-[10px] font-bold">STEP 1</span>
+                        <p>上の<strong>2つの赤い点</strong>をじーっと見つめます。</p>
+                    </div>
+                    <div class="flex items-start gap-2">
+                        <span class="bg-emerald-600 px-2 py-0.5 rounded text-[10px] font-bold">STEP 2</span>
+                        <p>視線をわざとずらし（遠くを見る、または寄り目にする）、<strong>点が「3つ」に並んで見える</strong>瞬間を探します。</p>
+                    </div>
+                    <div class="flex items-start gap-2">
+                        <span class="bg-emerald-600 px-2 py-0.5 rounded text-[10px] font-bold">STEP 3</span>
+                        <p>真ん中に見えた3つ目の点に集中しながら、下の画像に視線を移すと、図形が立体的に浮かび上がります。</p>
+                    </div>
                 </div>
 
                 <div class="flex gap-4">
                     <button id="next-stereo" class="px-6 py-2 bg-emerald-600 rounded-full hover:bg-emerald-500 transition font-bold shadow-md">別の図形に変える</button>
+                    <button data-goto="home" class="px-6 py-2 bg-slate-700 rounded-full hover:bg-slate-600 transition font-bold">戻る</button>
                 </div>
             </div>
         `;
