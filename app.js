@@ -139,12 +139,38 @@ class ContentSwitcher {
             <div class="flex flex-col items-center space-y-4">
                 <div class="text-center">
                     <h2 class="text-xl font-bold">ガポール・パッチ</h2>
-                    <p class="text-xs text-slate-400 mt-1">縞模様をじっと見つめてください。クリックで模様が変わります。</p>
+                    <p class="text-xs text-emerald-400 font-medium mt-1">見るだけで「脳」から視力をサポートします</p>
                 </div>
+
                 <div class="relative w-full max-w-2xl">
-                    <canvas id="gabor-canvas" width="600" height="400" class="w-full aspect-video border-4 border-slate-700"></canvas>
-                    <div class="absolute bottom-2 right-2 px-2 py-1 bg-black/50 text-[10px] rounded pointer-events-none">Canvas Area</div>
+                    <canvas id="gabor-canvas" width="600" height="400" class="w-full aspect-video border-4 border-slate-700 rounded-lg"></canvas>
                 </div>
+
+                <div class="bg-slate-800 p-4 rounded-xl max-w-md text-[11px] space-y-3 border border-slate-700">
+                    <div>
+                        <h4 class="text-emerald-400 font-bold mb-1">【効果について】</h4>
+                        <p class="text-slate-300 leading-relaxed">
+                            ガポール・パッチは、ノーベル物理学賞受賞者が考案した理論に基づく縞模様です。
+                            このボケた模様を脳が「はっきり見よう」と処理することで、視覚野が刺激され、視力回復や老眼ケアの補助になるとされています。
+                        </p>
+                    </div>
+                    <div class="space-y-2">
+                        <h4 class="text-emerald-400 font-bold mb-1">【やり方】</h4>
+                        <div class="flex items-start gap-2">
+                            <span class="bg-emerald-600 px-1.5 py-0.5 rounded text-[9px] font-bold">1</span>
+                            <p>画面に表示された<strong>縞模様（パッチ）の1つ</strong>に注目します。</p>
+                        </div>
+                        <div class="flex items-start gap-2">
+                            <span class="bg-emerald-600 px-1.5 py-0.5 rounded text-[9px] font-bold">2</span>
+                            <p>模様の「縞の向き」や「形」をなぞるように、<strong>30秒ほどじっと眺めてください。</strong></p>
+                        </div>
+                        <div class="flex items-start gap-2">
+                            <span class="bg-emerald-600 px-1.5 py-0.5 rounded text-[9px] font-bold">3</span>
+                            <p>終わったら、下のボタンで<strong>模様を更新</strong>して、別の場所のパッチで繰り返します。</p>
+                        </div>
+                    </div>
+                </div>
+
                 <div class="flex gap-4">
                     <button id="regen-gabor" class="px-8 py-3 bg-emerald-600 rounded-full hover:bg-emerald-500 font-bold transition shadow-lg">模様を更新する</button>
                     <button data-goto="home" class="px-8 py-3 bg-slate-700 rounded-full hover:bg-slate-600 transition font-bold">戻る</button>
