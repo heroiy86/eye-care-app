@@ -184,31 +184,21 @@ class ContentSwitcher {
             <div class="flex flex-col items-center space-y-4">
                 <div class="text-center">
                     <h2 class="text-xl font-bold text-slate-100">3Dステレオグラム</h2>
-                    <p class="text-[10px] text-emerald-400 font-medium mt-1">「2つの点」を「3つ」にする感覚を掴みましょう</p>
+                    <p class="text-[10px] text-emerald-400 font-medium mt-1">下の2つの点が「3つ」に見えるように目を調節してください</p>
                 </div>
                 
-                <div id="stereo-container" class="w-full max-w-2xl aspect-video bg-slate-900 rounded-2xl flex flex-col relative border-2 border-slate-700 shadow-2xl overflow-hidden">
-                    <!-- 基準点をコンテナ内に配置し、距離を縮める -->
-                    <div class="flex justify-center gap-16 pt-6 pb-2 bg-slate-900/80 z-10 border-b border-slate-800/30">
-                        <div class="flex flex-col items-center gap-1">
-                            <div class="w-3 h-3 rounded-full bg-rose-500 shadow-[0_0_10px_rgba(244,63,94,0.8)]"></div>
-                            <span class="text-[7px] text-slate-500 uppercase tracking-tighter">Point A</span>
-                        </div>
-                        <div class="flex flex-col items-center gap-1">
-                            <div class="w-3 h-3 rounded-full bg-rose-500 shadow-[0_0_10px_rgba(244,63,94,0.8)]"></div>
-                            <span class="text-[7px] text-slate-500 uppercase tracking-tighter">Point B</span>
-                        </div>
-                    </div>
-
-                    <!-- 下方向へのガイド矢印 -->
-                    <div class="absolute top-[60px] left-1/2 -translate-x-1/2 z-10 text-emerald-500/30 animate-bounce pointer-events-none">
-                        <svg class="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M19 14l-7 7m0 0l-7-7m7 7V3"></path></svg>
-                    </div>
-
-                    <canvas id="stereo-canvas" width="600" height="400" class="w-full h-full flex-grow opacity-90"></canvas>
+                <!-- 基準点を独立した位置に戻す -->
+                <div class="flex justify-center gap-16 py-2" id="stereo-reference-dots">
+                    <div class="w-3 h-3 rounded-full bg-rose-500 shadow-[0_0_10px_rgba(244,63,94,0.6)]"></div>
+                    <div class="w-3 h-3 rounded-full bg-rose-500 shadow-[0_0_10px_rgba(244,63,94,0.6)]"></div>
                 </div>
 
-                <!-- STEP形式のガイドを復活 -->
+                <!-- キャンバス枠を以前のシンプルな形に戻す -->
+                <div id="stereo-container" class="w-full max-w-2xl aspect-video bg-slate-900 rounded-lg flex items-center justify-center relative border-2 border-slate-800 shadow-xl overflow-hidden">
+                    <canvas id="stereo-canvas" width="600" height="400" class="w-full h-full opacity-90"></canvas>
+                </div>
+
+                <!-- STEP形式のガイド -->
                 <div class="bg-slate-800 p-4 rounded-xl max-w-md text-[11px] space-y-3 border border-slate-700 shadow-lg">
                     <div class="flex items-start gap-2">
                         <span class="bg-rose-600 px-1.5 py-0.5 rounded text-[9px] font-bold text-white whitespace-nowrap">STEP 1</span>
@@ -406,12 +396,11 @@ class StereoModule {
         ctx.fillStyle = '#0f172a';
         ctx.fillRect(0, 0, w, h);
 
-        // Pattern logic: Use repetitive textures to help 3D perception
         const colors = ['#10b981', '#3b82f6', '#8b5cf6'];
         const mainColor = colors[this.patternIndex];
 
         if (this.patternIndex === 0) {
-            this.drawComplexGrid(mainColor);
+            this.drawDotPattern(mainColor);
             this.drawDepthShape('circle', mainColor);
         } else if (this.patternIndex === 1) {
             this.drawNoisePattern(mainColor);
@@ -422,15 +411,16 @@ class StereoModule {
         }
     }
 
-    drawComplexGrid(color) {
+    drawDotPattern(color) {
         const ctx = this.ctx;
-        ctx.strokeStyle = color;
+        ctx.fillStyle = color;
         ctx.globalAlpha = 0.2;
         for (let x = 0; x < this.canvas.width; x += 15) {
-            ctx.beginPath();
-            ctx.moveTo(x, 0);
-            ctx.lineTo(x + 20, this.canvas.height);
-            ctx.stroke();
+            for (let y = 0; y < this.canvas.height; y += 15) {
+                ctx.beginPath();
+                ctx.arc(x, y, 1.5, 0, Math.PI * 2);
+                ctx.fill();
+            }
         }
         ctx.globalAlpha = 1.0;
     }
