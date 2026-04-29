@@ -1,0 +1,54 @@
+/* Global styles and animations */
+:root {
+    --bg-dark: #0f172a;
+    --accent: #10b981;
+}
+
+body {
+    background-color: var(--bg-dark);
+}
+
+/* Nav Link Active State */
+.nav-link.active {
+    color: var(--accent);
+    font-weight: bold;
+}
+
+/* Custom transitions */
+.fade-in {
+    animation: fadeIn 0.4s ease-out forwards;
+}
+
+@keyframes fadeIn {
+    from { opacity: 0; transform: translateY(10px); }
+    to { opacity: 1; transform: translateY(0); }
+}
+
+/* Gabor Patch Canvas */
+#gabor-canvas {
+    cursor: pointer;
+    background-color: #888; /* Gabor needs mid-gray background */
+    border-radius: 8px;
+    box-shadow: 0 4px 6px -1px rgb(0 0 0 / 0.1);
+}
+
+/* Focus Shifting Animation */
+.focus-target {
+    width: 30px;
+    height: 30px;
+    background-color: var(--accent);
+    border-radius: 50%;
+    position: absolute;
+    box-shadow: 0 0 20px var(--accent);
+    transition: all 2s cubic-bezier(0.4, 0, 0.2, 1);
+}
+
+/* Stereogram guides */
+.stereo-guide {
+    display: inline-block;
+    width: 20px;
+    height: 20px;
+    background-color: #ef4444;
+    border-radius: 50%;
+    margin: 0 40px;
+}

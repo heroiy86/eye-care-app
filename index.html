@@ -1,0 +1,76 @@
+<!DOCTYPE html>
+<html lang="ja">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Eye Care & Training - 眼精疲労ケア</title>
+    <!-- Tailwind CSS CDN -->
+    <script src="https://cdn.tailwindcss.com"></script>
+    <link rel="stylesheet" href="css/style.css">
+    <style>
+        /* Tailwind configuration for custom colors */
+        tailwind.config = {
+            theme: {
+                extend: {
+                    colors: {
+                        dark: '#0f172a',
+                    }
+                }
+            }
+        }
+    </style>
+</head>
+<body class="bg-dark text-slate-200 min-h-screen flex flex-col font-sans">
+
+    <!-- Header Navigation -->
+    <header class="bg-slate-900 border-b border-slate-800 sticky top-0 z-50">
+        <nav class="max-w-4xl mx-auto px-4 py-3 flex justify-between items-center">
+            <h1 class="text-xl font-bold text-emerald-500">EyeCare</h1>
+            <div class="hidden md:flex space-x-6 text-sm">
+                <button data-nav="home" class="nav-link hover:text-emerald-400 transition">ホーム</button>
+                <button data-nav="gabor" class="nav-link hover:text-emerald-400 transition">ガポール</button>
+                <button data-nav="stereo" class="nav-link hover:text-emerald-400 transition">3D視力</button>
+                <button data-nav="focus" class="nav-link hover:text-emerald-400 transition">遠近トレ</button>
+                <button data-nav="music" class="nav-link hover:text-emerald-400 transition">癒やし</button>
+            </div>
+        </nav>
+    </header>
+
+    <!-- Main Content Area -->
+    <main id="app-content" class="flex-grow max-w-4xl mx-auto w-full p-4 md:p-8">
+        <!-- Content will be injected by app.js -->
+        <div id="loading" class="flex items-center justify-center h-full">
+            <p class="animate-pulse">Loading...</p>
+        </div>
+    </main>
+
+    <!-- Bottom Navigation (Mobile) -->
+    <footer class="md:hidden bg-slate-900 border-t border-slate-800 sticky bottom-0 z-50">
+        <div class="grid grid-cols-5 text-[10px] text-center">
+            <button data-nav="home" class="nav-link p-3 flex flex-col items-center gap-1">
+                <span>🏠</span>
+                <span>ホーム</span>
+            </button>
+            <button data-nav="gabor" class="nav-link p-3 flex flex-col items-center gap-1">
+                <span>🌀</span>
+                <span>ガポール</span>
+            </button>
+            <button data-nav="stereo" class="nav-link p-3 flex flex-col items-center gap-1">
+                <span>🕶️</span>
+                <span>3D</span>
+            </button>
+            <button data-nav="focus" class="nav-link p-3 flex flex-col items-center gap-1">
+                <span>🟢</span>
+                <span>遠近</span>
+            </button>
+            <button data-nav="music" class="nav-link p-3 flex flex-col items-center gap-1">
+                <span>🎵</span>
+                <span>癒やし</span>
+            </button>
+        </div>
+    </footer>
+
+    <!-- Scripts -->
+    <script src="js/app.js"></script>
+</body>
+</html>
