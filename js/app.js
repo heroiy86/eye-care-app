@@ -95,10 +95,10 @@ class ContentSwitcher {
     getHomeHTML() {
         return `
             <div class="text-center space-y-6 py-10">
-                <h2 class="text-3xl font-bold text-emerald-400">目に休息を、脳に刺激を。</h2>
+                <h2 class="text-3xl font-bold text-emerald-400">目に休息を、視界にリフレッシュを。</h2>
                 <p class="text-slate-400 max-w-md mx-auto">
-                    デスクワークで疲れた目をリフレッシュしましょう。<br>
-                    以下のメニューからトレーニングを選択してください。
+                    デスクワークで疲れた目をいたわるセルフケアの時間です。<br>
+                    リラックスして、目の緊張を優しく解きほぐしましょう。
                 </p>
                 <div class="grid grid-cols-1 md:grid-cols-2 gap-4 mt-8">
                     <button data-goto="gabor" class="p-6 bg-slate-800 rounded-xl border border-slate-700 hover:border-emerald-500 hover:bg-slate-700 transition-all text-left group">
@@ -106,28 +106,28 @@ class ContentSwitcher {
                             <h3 class="font-bold text-emerald-300 text-lg">🌀 ガポールパッチ</h3>
                             <span class="group-hover:translate-x-1 transition-transform">→</span>
                         </div>
-                        <p class="text-xs text-slate-400">ボケた縞模様を探すことで、脳の視覚処理能力を鍛えます。近視や老眼のケアに。</p>
+                        <p class="text-xs text-slate-400">特殊な縞模様を眺めることで、視覚の仕組みをリフレッシュ。近視や老眼で疲れがちな目に。</p>
                     </button>
                     <button data-goto="stereo" class="p-6 bg-slate-800 rounded-xl border border-slate-700 hover:border-emerald-500 hover:bg-slate-700 transition-all text-left group">
                         <div class="flex justify-between items-start mb-2">
                             <h3 class="font-bold text-emerald-300 text-lg">🕶️ 3Dステレオグラム</h3>
                             <span class="group-hover:translate-x-1 transition-transform">→</span>
                         </div>
-                        <p class="text-xs text-slate-400">立体視を利用して目の筋肉をストレッチします。リラックス効果も。</p>
+                        <p class="text-xs text-slate-400">立体視を利用して目の筋肉を優しくストレッチします。ピント調節のリラックスに。</p>
                     </button>
                     <button data-goto="focus" class="p-6 bg-slate-800 rounded-xl border border-slate-700 hover:border-emerald-500 hover:bg-slate-700 transition-all text-left group">
                         <div class="flex justify-between items-start mb-2">
                             <h3 class="font-bold text-emerald-300 text-lg">🟢 遠近トレーニング</h3>
                             <span class="group-hover:translate-x-1 transition-transform">→</span>
                         </div>
-                        <p class="text-xs text-slate-400">動く円を目で追うことで、ピント調節を行う毛様体筋をほぐします。</p>
+                        <p class="text-xs text-slate-400">前後に動く円を追うことで、凝り固まったピント調節筋肉を柔軟にします。</p>
                     </button>
                     <button data-goto="music" class="p-6 bg-slate-800 rounded-xl border border-slate-700 hover:border-emerald-500 hover:bg-slate-700 transition-all text-left group">
                         <div class="flex justify-between items-start mb-2">
                             <h3 class="font-bold text-emerald-300 text-lg">🎵 癒やしのBGM</h3>
                             <span class="group-hover:translate-x-1 transition-transform">→</span>
                         </div>
-                        <p class="text-xs text-slate-400">トレーニング中や休憩中に最適なヒーリングミュージックを再生します。</p>
+                        <p class="text-xs text-slate-400">心安らぐヒーリングミュージックで、目とともに心身もリラックスさせましょう。</p>
                     </button>
                 </div>
             </div>
