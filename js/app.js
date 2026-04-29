@@ -108,19 +108,19 @@ class ContentSwitcher {
                         </div>
                         <p class="text-xs text-slate-400">ボケた縞模様を探すことで、脳の視覚処理能力を鍛えます。近視や老眼のケアに。</p>
                     </button>
-                    <button data-goto="focus" class="p-6 bg-slate-800 rounded-xl border border-slate-700 hover:border-emerald-500 hover:bg-slate-700 transition-all text-left group">
-                        <div class="flex justify-between items-start mb-2">
-                            <h3 class="font-bold text-emerald-300 text-lg">🟢 遠近トレーニング</h3>
-                            <span class="group-hover:translate-x-1 transition-transform">→</span>
-                        </div>
-                        <p class="text-xs text-slate-400">動く円を目で追うことで、ピント調節を行う毛様体筋をほぐします。</p>
-                    </button>
                     <button data-goto="stereo" class="p-6 bg-slate-800 rounded-xl border border-slate-700 hover:border-emerald-500 hover:bg-slate-700 transition-all text-left group">
                         <div class="flex justify-between items-start mb-2">
                             <h3 class="font-bold text-emerald-300 text-lg">🕶️ 3Dステレオグラム</h3>
                             <span class="group-hover:translate-x-1 transition-transform">→</span>
                         </div>
                         <p class="text-xs text-slate-400">立体視を利用して目の筋肉をストレッチします。リラックス効果も。</p>
+                    </button>
+                    <button data-goto="focus" class="p-6 bg-slate-800 rounded-xl border border-slate-700 hover:border-emerald-500 hover:bg-slate-700 transition-all text-left group">
+                        <div class="flex justify-between items-start mb-2">
+                            <h3 class="font-bold text-emerald-300 text-lg">🟢 遠近トレーニング</h3>
+                            <span class="group-hover:translate-x-1 transition-transform">→</span>
+                        </div>
+                        <p class="text-xs text-slate-400">動く円を目で追うことで、ピント調節を行う毛様体筋をほぐします。</p>
                     </button>
                     <button data-goto="music" class="p-6 bg-slate-800 rounded-xl border border-slate-700 hover:border-emerald-500 hover:bg-slate-700 transition-all text-left group">
                         <div class="flex justify-between items-start mb-2">
