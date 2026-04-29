@@ -197,10 +197,20 @@ class ContentSwitcher {
     getFocusHTML() {
         return `
             <div class="flex flex-col items-center space-y-4 h-full relative">
-                <h2 class="text-xl font-bold">遠近・視点移動</h2>
-                <p class="text-sm text-slate-400">頭を動かさず、緑の円だけを視線で追ってください。</p>
-                <div id="focus-area" class="w-full flex-grow bg-slate-800/50 rounded-xl border border-slate-700 relative overflow-hidden min-h-[300px]">
+                <div class="text-center">
+                    <h2 class="text-xl font-bold">遠近・視点移動トレーニング</h2>
+                    <p class="text-xs text-emerald-400 font-medium mt-1">円の大きさに合わせて、ピントを意識的に合わせましょう</p>
+                </div>
+                
+                <div id="focus-area" class="w-full flex-grow bg-slate-800/50 rounded-xl border border-slate-700 relative overflow-hidden min-h-[350px]">
                     <div id="focus-dot" class="focus-target"></div>
+                </div>
+
+                <div class="bg-slate-800 p-3 rounded-lg w-full max-w-md text-[11px] border border-slate-700">
+                    <p class="text-slate-300 text-center">
+                        <span class="text-emerald-400 font-bold">●</span> <strong>大きく見える時:</strong> 画面の表面に焦点を合わせます。<br>
+                        <span class="text-emerald-400 font-bold">●</span> <strong>小さくぼやける時:</strong> 画面の「奥」を見るように意識し、ピントを緩めます。
+                    </p>
                 </div>
             </div>
         `;
@@ -412,13 +422,14 @@ class FocusModule {
     constructor() {
         this.dot = document.getElementById('focus-dot');
         this.area = document.getElementById('focus-area');
-        this.positions = [
-            { top: '50%', left: '50%' },
-            { top: '15%', left: '15%' },
-            { top: '15%', left: '85%' },
-            { top: '85%', left: '85%' },
-            { top: '85%', left: '15%' },
-            { top: '50%', left: '50%' },
+        // Combined position and depth
+        this.states = [
+            { top: '50%', left: '50%', scale: 2.5, blur: '0px', opacity: 1 },    // Near (Center)
+            { top: '50%', left: '50%', scale: 0.4, blur: '2px', opacity: 0.6 },  // Far (Center)
+            { top: '15%', left: '15%', scale: 2.0, blur: '0px', opacity: 1 },    // Near (Top Left)
+            { top: '15%', left: '85%', scale: 0.5, blur: '2px', opacity: 0.6 },  // Far (Top Right)
+            { top: '85%', left: '85%', scale: 2.0, blur: '0px', opacity: 1 },    // Near (Bottom Right)
+            { top: '85%', left: '15%', scale: 0.5, blur: '2px', opacity: 0.6 },  // Far (Bottom Left)
         ];
         this.currentIndex = 0;
         this.timer = null;
@@ -427,18 +438,24 @@ class FocusModule {
     }
 
     init() {
+        if (this.dot) {
+            this.dot.style.transition = 'all 2.5s ease-in-out';
+        }
         this.move();
-        this.timer = setInterval(() => this.move(), 2500);
+        this.timer = setInterval(() => this.move(), 3000);
     }
 
     move() {
         if (!this.dot) return;
-        const pos = this.positions[this.currentIndex];
-        this.dot.style.top = pos.top;
-        this.dot.style.left = pos.left;
-        this.dot.style.transform = 'translate(-50%, -50%)';
+        const state = this.states[this.currentIndex];
+        
+        this.dot.style.top = state.top;
+        this.dot.style.left = state.left;
+        this.dot.style.transform = `translate(-50%, -50%) scale(${state.scale})`;
+        this.dot.style.filter = `blur(${state.blur})`;
+        this.dot.style.opacity = state.opacity;
 
-        this.currentIndex = (this.currentIndex + 1) % this.positions.length;
+        this.currentIndex = (this.currentIndex + 1) % this.states.length;
     }
 
     destroy() {
