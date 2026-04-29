@@ -183,38 +183,47 @@ class ContentSwitcher {
         return `
             <div class="flex flex-col items-center space-y-4">
                 <div class="text-center">
-                    <h2 class="text-xl font-bold">3Dステレオグラム</h2>
-                    <p class="text-xs text-emerald-400 font-medium mt-1">下の2つの点が「3つ」に見えるように目を調節してください</p>
+                    <h2 class="text-xl font-bold text-slate-100">3Dステレオグラム</h2>
+                    <p class="text-[10px] text-emerald-400 font-medium mt-1">「2つの点」を「3つ」にする感覚を掴みましょう</p>
                 </div>
                 
-                <!-- 実際の基準点 -->
-                <div class="flex justify-center gap-16 py-2" id="stereo-reference-dots">
-                    <div class="w-4 h-4 rounded-full bg-red-500 shadow-[0_0_10px_rgba(239,68,68,0.5)]"></div>
-                    <div class="w-4 h-4 rounded-full bg-red-500 shadow-[0_0_10px_rgba(239,68,68,0.5)]"></div>
+                <div id="stereo-container" class="w-full max-w-2xl aspect-video bg-slate-900 rounded-2xl flex flex-col relative border-2 border-slate-700 shadow-2xl overflow-hidden">
+                    <!-- 基準点をコンテナ内に配置し、距離を縮める -->
+                    <div class="flex justify-center gap-16 pt-6 pb-2 bg-slate-900/80 z-10 border-b border-slate-800/50">
+                        <div class="flex flex-col items-center gap-1">
+                            <div class="w-4 h-4 rounded-full bg-rose-500 shadow-[0_0_15px_rgba(244,63,94,0.6)]"></div>
+                            <span class="text-[8px] text-slate-500 uppercase tracking-widest">Focus A</span>
+                        </div>
+                        <div class="flex flex-col items-center gap-1">
+                            <div class="w-4 h-4 rounded-full bg-rose-500 shadow-[0_0_15px_rgba(244,63,94,0.6)]"></div>
+                            <span class="text-[8px] text-slate-500 uppercase tracking-widest">Focus B</span>
+                        </div>
+                    </div>
+
+                    <!-- 下方向へのガイド矢印 -->
+                    <div class="absolute top-[70px] left-1/2 -translate-x-1/2 z-10 text-emerald-500/50 animate-bounce pointer-events-none">
+                        <svg class="w-6 h-6" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M19 14l-7 7m0 0l-7-7m7 7V3"></path></svg>
+                    </div>
+
+                    <canvas id="stereo-canvas" width="600" height="400" class="w-full h-full flex-grow opacity-90"></canvas>
+                    
+                    <div class="absolute bottom-4 left-0 right-0 flex justify-center px-4">
+                         <div class="bg-black/40 backdrop-blur-sm px-4 py-1.5 rounded-full border border-white/10 text-[10px] text-slate-300">
+                            点の重なりを維持したまま、視線をここ（画像全体）に広げます
+                         </div>
+                    </div>
                 </div>
 
-                <div id="stereo-container" class="w-full max-w-2xl aspect-video bg-slate-900 rounded-lg flex items-center justify-center relative border-2 border-slate-800">
-                    <canvas id="stereo-canvas" width="600" height="400" class="w-full h-full opacity-80"></canvas>
-                </div>
-
-                <div class="bg-slate-800 p-4 rounded-lg max-w-md text-[11px] space-y-3 border border-slate-700">
-                    <div class="flex items-start gap-2">
-                        <span class="bg-emerald-600 px-2 py-0.5 rounded text-[10px] font-bold">STEP 1</span>
-                        <p>上の<strong>2つの赤い点</strong>をじーっと見つめます。</p>
-                    </div>
-                    <div class="flex items-start gap-2">
-                        <span class="bg-emerald-600 px-2 py-0.5 rounded text-[10px] font-bold">STEP 2</span>
-                        <p>視線をわざとずらし（遠くを見る、または寄り目にする）、<strong>点が「3つ」に並んで見える</strong>瞬間を探します。</p>
-                    </div>
-                    <div class="flex items-start gap-2">
-                        <span class="bg-emerald-600 px-2 py-0.5 rounded text-[10px] font-bold">STEP 3</span>
-                        <p>真ん中に見えた3つ目の点に集中しながら、下の画像に視線を移すと、図形が立体的に浮かび上がります。</p>
-                    </div>
+                <div class="bg-slate-800/50 p-4 rounded-xl max-w-md text-[11px] space-y-3 border border-slate-700/50">
+                    <p class="text-slate-300 text-center leading-relaxed">
+                        画像は、奥行きを感じやすいように<strong>エメラルドとブルーの幾何学パターン</strong>で構成されています。
+                        ピントが合うと、中央に鮮やかな図形が浮かび上がります。
+                    </p>
                 </div>
 
                 <div class="flex gap-4">
-                    <button id="next-stereo" class="px-6 py-2 bg-emerald-600 rounded-full hover:bg-emerald-500 transition font-bold shadow-md">別の図形に変える</button>
-                    <button data-goto="home" class="px-6 py-2 bg-slate-700 rounded-full hover:bg-slate-600 transition font-bold">戻る</button>
+                    <button id="next-stereo" class="px-6 py-2 bg-emerald-600 rounded-full hover:bg-emerald-500 transition font-bold shadow-lg text-sm">図形とパターンを更新</button>
+                    <button data-goto="home" class="px-6 py-2 bg-slate-700 rounded-full hover:bg-slate-600 transition font-bold text-sm">戻る</button>
                 </div>
             </div>
         `;
@@ -390,64 +399,99 @@ class StereoModule {
         const w = this.canvas.width;
         const h = this.canvas.height;
 
+        // Background
         ctx.fillStyle = '#0f172a';
         ctx.fillRect(0, 0, w, h);
 
-        // Generate dynamic patterns
+        // Pattern logic: Use repetitive textures to help 3D perception
+        const colors = ['#10b981', '#3b82f6', '#8b5cf6'];
+        const mainColor = colors[this.patternIndex];
+
         if (this.patternIndex === 0) {
-            this.drawNoisePattern('#334155');
-            this.drawDepthShape('circle');
+            this.drawComplexGrid(mainColor);
+            this.drawDepthShape('circle', mainColor);
         } else if (this.patternIndex === 1) {
-            this.drawGridPattern('#1e293b');
-            this.drawDepthShape('square');
+            this.drawNoisePattern(mainColor);
+            this.drawDepthShape('square', mainColor);
         } else {
-            this.drawAbstractPattern();
+            this.drawStarPattern(mainColor);
+            this.drawDepthShape('diamond', mainColor);
         }
+    }
+
+    drawComplexGrid(color) {
+        const ctx = this.ctx;
+        ctx.strokeStyle = color;
+        ctx.globalAlpha = 0.2;
+        for (let x = 0; x < this.canvas.width; x += 15) {
+            ctx.beginPath();
+            ctx.moveTo(x, 0);
+            ctx.lineTo(x + 20, this.canvas.height);
+            ctx.stroke();
+        }
+        ctx.globalAlpha = 1.0;
     }
 
     drawNoisePattern(color) {
         this.ctx.fillStyle = color;
-        for (let i = 0; i < 5000; i++) {
+        this.ctx.globalAlpha = 0.15;
+        for (let i = 0; i < 8000; i++) {
             const x = Math.random() * this.canvas.width;
             const y = Math.random() * this.canvas.height;
-            this.ctx.fillRect(x, y, 1, 1);
+            this.ctx.fillRect(x, y, 1.5, 1.5);
         }
+        this.ctx.globalAlpha = 1.0;
     }
 
-    drawGridPattern(color) {
-        this.ctx.strokeStyle = color;
-        this.ctx.lineWidth = 0.5;
-        for (let x = 0; x < this.canvas.width; x += 10) {
-            this.ctx.beginPath();
-            this.ctx.moveTo(x, 0);
-            this.ctx.lineTo(x, this.canvas.height);
-            this.ctx.stroke();
+    drawStarPattern(color) {
+        const ctx = this.ctx;
+        ctx.fillStyle = color;
+        ctx.globalAlpha = 0.2;
+        for (let i = 0; i < 400; i++) {
+            const x = (i * 47) % this.canvas.width;
+            const y = (i * 31) % this.canvas.height;
+            ctx.beginPath();
+            ctx.arc(x, y, 1, 0, Math.PI * 2);
+            ctx.fill();
         }
+        ctx.globalAlpha = 1.0;
     }
 
-    drawAbstractPattern() {
-        this.ctx.strokeStyle = '#2d3748';
-        for (let i = 0; i < 100; i++) {
-            this.ctx.beginPath();
-            this.ctx.arc(Math.random() * 600, Math.random() * 400, Math.random() * 20, 0, Math.PI * 2);
-            this.ctx.stroke();
-        }
-    }
-
-    drawDepthShape(type) {
-        // Visual indicator that something is there
-        this.ctx.fillStyle = 'rgba(16, 185, 129, 0.2)';
-        this.ctx.beginPath();
-        if (type === 'circle') {
-            this.ctx.arc(300, 200, 80, 0, Math.PI * 2);
-        } else {
-            this.ctx.rect(220, 120, 160, 160);
-        }
-        this.ctx.fill();
+    drawDepthShape(type, color) {
+        const ctx = this.ctx;
+        ctx.save();
         
-        this.ctx.fillStyle = 'rgba(255,255,255,0.1)';
-        this.ctx.font = '12px sans-serif';
-        this.ctx.fillText('Depth Layer Active', 250, 320);
+        // Use a gradient for the "hidden" shape to make it pop
+        const grad = ctx.createLinearGradient(200, 100, 400, 300);
+        grad.addColorStop(0, color);
+        grad.addColorStop(1, '#ffffff');
+
+        ctx.fillStyle = grad;
+        ctx.globalAlpha = 0.6; // Higher visibility
+        ctx.shadowBlur = 20;
+        ctx.shadowColor = color;
+
+        ctx.beginPath();
+        if (type === 'circle') {
+            ctx.arc(300, 200, 90, 0, Math.PI * 2);
+        } else if (type === 'square') {
+            ctx.rect(210, 110, 180, 180);
+        } else {
+            // Diamond
+            ctx.moveTo(300, 100);
+            ctx.lineTo(450, 200);
+            ctx.lineTo(300, 300);
+            ctx.lineTo(150, 200);
+            ctx.closePath();
+        }
+        ctx.fill();
+        
+        // Add a subtle inner glow
+        ctx.strokeStyle = 'rgba(255,255,255,0.4)';
+        ctx.lineWidth = 2;
+        ctx.stroke();
+        
+        ctx.restore();
     }
 }
 
