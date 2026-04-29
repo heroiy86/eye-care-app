@@ -189,8 +189,8 @@ class ContentSwitcher {
                 
                 <!-- 実際の基準点 -->
                 <div class="flex justify-center gap-16 py-2" id="stereo-reference-dots">
-                    <div class="w-4 h-4 rounded-full bg-red-500 shadow-[0_0_10px_rgba(239,68,68,0.8)] animate-pulse"></div>
-                    <div class="w-4 h-4 rounded-full bg-red-500 shadow-[0_0_10px_rgba(239,68,68,0.8)] animate-pulse"></div>
+                    <div class="w-4 h-4 rounded-full bg-red-500 shadow-[0_0_10px_rgba(239,68,68,0.5)]"></div>
+                    <div class="w-4 h-4 rounded-full bg-red-500 shadow-[0_0_10px_rgba(239,68,68,0.5)]"></div>
                 </div>
 
                 <div id="stereo-container" class="w-full max-w-2xl aspect-video bg-slate-900 rounded-lg flex items-center justify-center relative border-2 border-slate-800">
