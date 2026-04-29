@@ -189,41 +189,44 @@ class ContentSwitcher {
                 
                 <div id="stereo-container" class="w-full max-w-2xl aspect-video bg-slate-900 rounded-2xl flex flex-col relative border-2 border-slate-700 shadow-2xl overflow-hidden">
                     <!-- 基準点をコンテナ内に配置し、距離を縮める -->
-                    <div class="flex justify-center gap-16 pt-6 pb-2 bg-slate-900/80 z-10 border-b border-slate-800/50">
+                    <div class="flex justify-center gap-16 pt-6 pb-2 bg-slate-900/80 z-10 border-b border-slate-800/30">
                         <div class="flex flex-col items-center gap-1">
-                            <div class="w-4 h-4 rounded-full bg-rose-500 shadow-[0_0_15px_rgba(244,63,94,0.6)]"></div>
-                            <span class="text-[8px] text-slate-500 uppercase tracking-widest">Focus A</span>
+                            <div class="w-3 h-3 rounded-full bg-rose-500 shadow-[0_0_10px_rgba(244,63,94,0.8)]"></div>
+                            <span class="text-[7px] text-slate-500 uppercase tracking-tighter">Point A</span>
                         </div>
                         <div class="flex flex-col items-center gap-1">
-                            <div class="w-4 h-4 rounded-full bg-rose-500 shadow-[0_0_15px_rgba(244,63,94,0.6)]"></div>
-                            <span class="text-[8px] text-slate-500 uppercase tracking-widest">Focus B</span>
+                            <div class="w-3 h-3 rounded-full bg-rose-500 shadow-[0_0_10px_rgba(244,63,94,0.8)]"></div>
+                            <span class="text-[7px] text-slate-500 uppercase tracking-tighter">Point B</span>
                         </div>
                     </div>
 
                     <!-- 下方向へのガイド矢印 -->
-                    <div class="absolute top-[70px] left-1/2 -translate-x-1/2 z-10 text-emerald-500/50 animate-bounce pointer-events-none">
-                        <svg class="w-6 h-6" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M19 14l-7 7m0 0l-7-7m7 7V3"></path></svg>
+                    <div class="absolute top-[60px] left-1/2 -translate-x-1/2 z-10 text-emerald-500/30 animate-bounce pointer-events-none">
+                        <svg class="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M19 14l-7 7m0 0l-7-7m7 7V3"></path></svg>
                     </div>
 
                     <canvas id="stereo-canvas" width="600" height="400" class="w-full h-full flex-grow opacity-90"></canvas>
-                    
-                    <div class="absolute bottom-4 left-0 right-0 flex justify-center px-4">
-                         <div class="bg-black/40 backdrop-blur-sm px-4 py-1.5 rounded-full border border-white/10 text-[10px] text-slate-300">
-                            点の重なりを維持したまま、視線をここ（画像全体）に広げます
-                         </div>
+                </div>
+
+                <!-- STEP形式のガイドを復活 -->
+                <div class="bg-slate-800 p-4 rounded-xl max-w-md text-[11px] space-y-3 border border-slate-700 shadow-lg">
+                    <div class="flex items-start gap-2">
+                        <span class="bg-rose-600 px-1.5 py-0.5 rounded text-[9px] font-bold text-white whitespace-nowrap">STEP 1</span>
+                        <p class="text-slate-300">上の<strong>2つの赤い点</strong>をじーっと見つめます。</p>
+                    </div>
+                    <div class="flex items-start gap-2">
+                        <span class="bg-emerald-600 px-1.5 py-0.5 rounded text-[9px] font-bold text-white whitespace-nowrap">STEP 2</span>
+                        <p class="text-slate-300">視線をわざとずらし、<strong>点が「3つ」に並んで見える</strong>状態を作ります（真ん中に3つ目の点が現れます）。</p>
+                    </div>
+                    <div class="flex items-start gap-2">
+                        <span class="bg-blue-600 px-1.5 py-0.5 rounded text-[9px] font-bold text-white whitespace-nowrap">STEP 3</span>
+                        <p class="text-slate-300">そのピントを維持したまま<strong>下の画像へ視線を移す</strong>と、中央に鮮やかな図形が浮き出ます。</p>
                     </div>
                 </div>
 
-                <div class="bg-slate-800/50 p-4 rounded-xl max-w-md text-[11px] space-y-3 border border-slate-700/50">
-                    <p class="text-slate-300 text-center leading-relaxed">
-                        画像は、奥行きを感じやすいように<strong>エメラルドとブルーの幾何学パターン</strong>で構成されています。
-                        ピントが合うと、中央に鮮やかな図形が浮かび上がります。
-                    </p>
-                </div>
-
                 <div class="flex gap-4">
-                    <button id="next-stereo" class="px-6 py-2 bg-emerald-600 rounded-full hover:bg-emerald-500 transition font-bold shadow-lg text-sm">図形とパターンを更新</button>
-                    <button data-goto="home" class="px-6 py-2 bg-slate-700 rounded-full hover:bg-slate-600 transition font-bold text-sm">戻る</button>
+                    <button id="next-stereo" class="px-6 py-2 bg-emerald-600 rounded-full hover:bg-emerald-500 transition font-bold shadow-lg text-xs">図形を切り替える</button>
+                    <button data-goto="home" class="px-8 py-2 bg-slate-700 rounded-full hover:bg-slate-600 transition font-bold text-xs text-slate-300">戻る</button>
                 </div>
             </div>
         `;
@@ -461,34 +464,35 @@ class StereoModule {
         const ctx = this.ctx;
         ctx.save();
         
-        // Use a gradient for the "hidden" shape to make it pop
+        // Subtle gradient to blend with repetitive patterns
         const grad = ctx.createLinearGradient(200, 100, 400, 300);
         grad.addColorStop(0, color);
-        grad.addColorStop(1, '#ffffff');
+        grad.addColorStop(0.5, 'rgba(255,255,255,0.1)'); 
+        grad.addColorStop(1, color);
 
         ctx.fillStyle = grad;
-        ctx.globalAlpha = 0.6; // Higher visibility
-        ctx.shadowBlur = 20;
+        ctx.globalAlpha = 0.35; 
+        ctx.shadowBlur = 10;
         ctx.shadowColor = color;
 
         ctx.beginPath();
         if (type === 'circle') {
-            ctx.arc(300, 200, 90, 0, Math.PI * 2);
+            ctx.arc(300, 200, 85, 0, Math.PI * 2);
         } else if (type === 'square') {
-            ctx.rect(210, 110, 180, 180);
+            ctx.rect(215, 115, 170, 170);
         } else {
             // Diamond
-            ctx.moveTo(300, 100);
-            ctx.lineTo(450, 200);
-            ctx.lineTo(300, 300);
-            ctx.lineTo(150, 200);
+            ctx.moveTo(300, 105);
+            ctx.lineTo(440, 200);
+            ctx.lineTo(300, 295);
+            ctx.lineTo(160, 200);
             ctx.closePath();
         }
         ctx.fill();
         
-        // Add a subtle inner glow
-        ctx.strokeStyle = 'rgba(255,255,255,0.4)';
-        ctx.lineWidth = 2;
+        // Very subtle inner stroke to help the brain lock the depth
+        ctx.strokeStyle = 'rgba(255,255,255,0.15)';
+        ctx.lineWidth = 1;
         ctx.stroke();
         
         ctx.restore();
