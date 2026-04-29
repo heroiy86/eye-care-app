@@ -225,19 +225,27 @@ class ContentSwitcher {
             <div class="flex flex-col items-center space-y-4 h-full relative">
                 <div class="text-center">
                     <h2 class="text-xl font-bold">遠近・視点移動トレーニング</h2>
-                    <p class="text-xs text-emerald-400 font-medium mt-1">円の大きさに合わせて、ピントを意識的に合わせましょう</p>
+                    <p class="text-xs text-emerald-400 font-medium mt-1">円の動きに合わせて、ピントを意識的に合わせましょう</p>
                 </div>
                 
+                <!-- レベル選択 -->
+                <div class="flex gap-2 bg-slate-800 p-1 rounded-full border border-slate-700">
+                    <button data-level="slow" class="focus-level-btn px-4 py-1 text-[10px] rounded-full transition-all text-slate-400">リラックス</button>
+                    <button data-level="normal" class="focus-level-btn px-4 py-1 text-[10px] rounded-full transition-all bg-emerald-600 font-bold text-white">標準</button>
+                    <button data-level="active" class="focus-level-btn px-4 py-1 text-[10px] rounded-full transition-all text-slate-400">リフレッシュ</button>
+                </div>
+
                 <div id="focus-area" class="w-full flex-grow bg-slate-800/50 rounded-xl border border-slate-700 relative overflow-hidden min-h-[350px]">
                     <div id="focus-dot" class="focus-target"></div>
                 </div>
 
                 <div class="bg-slate-800 p-3 rounded-lg w-full max-w-md text-[11px] border border-slate-700">
                     <p class="text-slate-300 text-center">
-                        <span class="text-emerald-400 font-bold">●</span> <strong>大きく見える時:</strong> 画面の表面に焦点を合わせます。<br>
-                        <span class="text-emerald-400 font-bold">●</span> <strong>小さくぼやける時:</strong> 画面の「奥」を見るように意識し、ピントを緩めます。
+                        動きが<strong>「ランダム」</strong>になります。予測せず、円をしっかり追いましょう。<br>
+                        <span class="text-emerald-400 font-bold">●</span> 大きく見える時は表面、<span class="text-emerald-400 font-bold">●</span> 小さくぼやける時は奥にピントを。
                     </p>
                 </div>
+                <button data-goto="home" class="px-8 py-2 bg-slate-700 rounded-full hover:bg-slate-600 transition font-bold text-xs">戻る</button>
             </div>
         `;
     }
@@ -448,44 +456,98 @@ class FocusModule {
     constructor() {
         this.dot = document.getElementById('focus-dot');
         this.area = document.getElementById('focus-area');
-        // Combined position and depth
+        this.levelButtons = document.querySelectorAll('.focus-level-btn');
+        
+        // Configuration for different levels
+        this.levels = {
+            slow: { interval: 4000, transition: '3.5s' },
+            normal: { interval: 3000, transition: '2.5s' },
+            active: { interval: 2000, transition: '1.5s' }
+        };
+        this.currentLevel = 'normal';
+        this.lastIndex = -1;
+        
+        // Possible states for random selection
         this.states = [
-            { top: '50%', left: '50%', scale: 2.5, blur: '0px', opacity: 1 },    // Near (Center)
-            { top: '50%', left: '50%', scale: 0.4, blur: '2px', opacity: 0.6 },  // Far (Center)
-            { top: '15%', left: '15%', scale: 2.0, blur: '0px', opacity: 1 },    // Near (Top Left)
-            { top: '15%', left: '85%', scale: 0.5, blur: '2px', opacity: 0.6 },  // Far (Top Right)
-            { top: '85%', left: '85%', scale: 2.0, blur: '0px', opacity: 1 },    // Near (Bottom Right)
-            { top: '85%', left: '15%', scale: 0.5, blur: '2px', opacity: 0.6 },  // Far (Bottom Left)
+            { top: '50%', left: '50%', scale: 2.5, blur: '0px', opacity: 1 },    // Near Center
+            { top: '50%', left: '50%', scale: 0.4, blur: '2px', opacity: 0.6 },  // Far Center
+            { top: '15%', left: '15%', scale: 2.0, blur: '0px', opacity: 1 },    // Near Top Left
+            { top: '15%', left: '85%', scale: 0.5, blur: '2px', opacity: 0.6 },  // Far Top Right
+            { top: '85%', left: '85%', scale: 2.0, blur: '0px', opacity: 1 },    // Near Bottom Right
+            { top: '85%', left: '15%', scale: 0.5, blur: '2px', opacity: 0.6 },  // Far Bottom Left
+            { top: '15%', left: '50%', scale: 1.2, blur: '0px', opacity: 0.9 },  // Mid Top
+            { top: '85%', left: '50%', scale: 1.2, blur: '0px', opacity: 0.9 },  // Mid Bottom
+            { top: '50%', left: '15%', scale: 1.2, blur: '0px', opacity: 0.9 },  // Mid Left
+            { top: '50%', left: '85%', scale: 1.2, blur: '0px', opacity: 0.9 },  // Mid Right
         ];
-        this.currentIndex = 0;
+        
         this.timer = null;
-
         this.init();
     }
 
     init() {
+        // Event listeners for level selection
+        this.levelButtons.forEach(btn => {
+            btn.onclick = (e) => {
+                this.setLevel(e.target.getAttribute('data-level'));
+            };
+        });
+
+        this.updateAnimation();
+        this.startTimer();
+    }
+
+    setLevel(level) {
+        this.currentLevel = level;
+        
+        // Update UI
+        this.levelButtons.forEach(btn => {
+            if (btn.getAttribute('data-level') === level) {
+                btn.classList.add('bg-emerald-600', 'font-bold', 'text-white');
+                btn.classList.remove('text-slate-400');
+            } else {
+                btn.classList.remove('bg-emerald-600', 'font-bold', 'text-white');
+                btn.classList.add('text-slate-400');
+            }
+        });
+
+        this.updateAnimation();
+        this.startTimer(); // Restart with new interval
+    }
+
+    updateAnimation() {
         if (this.dot) {
-            this.dot.style.transition = 'all 2.5s ease-in-out';
+            this.dot.style.transition = `all ${this.levels[this.currentLevel].transition} ease-in-out`;
         }
+    }
+
+    startTimer() {
+        if (this.timer) clearInterval(this.timer);
         this.move();
-        this.timer = setInterval(() => this.move(), 3000);
+        this.timer = setInterval(() => this.move(), this.levels[this.currentLevel].interval);
     }
 
     move() {
         if (!this.dot) return;
-        const state = this.states[this.currentIndex];
+        
+        // Pick a random state different from current
+        let nextIndex;
+        do {
+            nextIndex = Math.floor(Math.random() * this.states.length);
+        } while (nextIndex === this.lastIndex);
+        
+        this.lastIndex = nextIndex;
+        const state = this.states[nextIndex];
         
         this.dot.style.top = state.top;
         this.dot.style.left = state.left;
         this.dot.style.transform = `translate(-50%, -50%) scale(${state.scale})`;
         this.dot.style.filter = `blur(${state.blur})`;
         this.dot.style.opacity = state.opacity;
-
-        this.currentIndex = (this.currentIndex + 1) % this.states.length;
     }
 
     destroy() {
-        clearInterval(this.timer);
+        if (this.timer) clearInterval(this.timer);
     }
 }
 
